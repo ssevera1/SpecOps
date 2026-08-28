@@ -10,7 +10,7 @@
  * occupy, and pad above and below it to sit roughly centred.
  */
 
-import { measureTextWrap, pxTruncate } from '@evenrealities/pretext'
+import { measureTextWrap } from '@evenrealities/pretext'
 import type { Category } from './lines'
 
 export const SCREEN_WIDTH = 576
@@ -35,12 +35,10 @@ export function composeScreen(category: Category, lineIndex: number): string {
   // How many rows will the body occupy once the container wraps it?
   const bodyRows = Math.max(1, measureTextWrap(line, CONTENT_WIDTH).lineCount)
 
-  // If a line somehow overflows the body area, truncate rather than let
-  // it push the footer off screen.
-  const body =
-    bodyRows > BODY_ROWS
-      ? pxTruncate(line, CONTENT_WIDTH * BODY_ROWS)
-      : line
+  // If a line somehow overflows the body area, trim it rather than let
+  // it push the footer off screen. check-layout is the real guard; this
+  // is just so a bad line degrades visibly instead of breaking layout.
+  const body = bodyRows > BODY_ROWS ? trimToRows(line, BODY_ROWS) : line
 
   const used = Math.min(bodyRows, BODY_ROWS)
   const spare = BODY_ROWS - used
@@ -58,4 +56,29 @@ export function composeScreen(category: Category, lineIndex: number): string {
 
 function blank(n: number): string[] {
   return Array.from({ length: n }, () => '')
+}
+
+/**
+ * Trims text until it wraps into at most `rows` rows, appending an
+ * ellipsis. Binary search on length, measuring each candidate the same
+ * way the firmware will wrap it.
+ *
+ * `pxTruncate` from pretext is not usable here: it fits a string to a
+ * single-line pixel budget, and there is no meaningful pixel budget for
+ * a multi-row block.
+ */
+function trimToRows(text: string, rows: number): string {
+  const fits = (s: string) =>
+    measureTextWrap(s + '...', CONTENT_WIDTH).lineCount <= rows
+
+  if (measureTextWrap(text, CONTENT_WIDTH).lineCount <= rows) return text
+
+  let lo = 0
+  let hi = text.length
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2)
+    if (fits(text.slice(0, mid))) lo = mid
+    else hi = mid - 1
+  }
+  return text.slice(0, lo).trimEnd() + '...'
 }

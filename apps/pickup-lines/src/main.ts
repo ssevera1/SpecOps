@@ -48,18 +48,51 @@ let lineIndex = 0
 
 const bridge = await waitForEvenAppBridge()
 
-/** Pushes the current selection to the glasses without a full redraw. */
+let painting = false
+let repaintQueued = false
+
+/**
+ * Pushes the current selection to the glasses without a full redraw.
+ *
+ * Serialised and coalescing, for two reasons. Content is snapshotted
+ * synchronously and then awaited, so two updates in flight can resolve
+ * out of order and leave the display showing the older line. And a fast
+ * thumb on the touchpad would otherwise queue one BLE write per gesture
+ * when only the final state matters.
+ *
+ * While a write is in flight, further requests just set a flag. When it
+ * settles we repaint once from whatever the state is by then.
+ */
 async function paint(): Promise<void> {
-  const content = composeScreen(CATEGORIES[categoryIndex], lineIndex)
-  await bridge.textContainerUpgrade(
-    new TextContainerUpgrade({
-      containerID: CONTAINER_ID,
-      containerName: CONTAINER_NAME,
-      contentOffset: 0,
-      contentLength: 0, // 0 with offset 0 replaces the whole content
-      content,
-    }),
-  )
+  if (painting) {
+    repaintQueued = true
+    return
+  }
+  painting = true
+  try {
+    do {
+      repaintQueued = false
+      const content = composeScreen(CATEGORIES[categoryIndex], lineIndex)
+      const ok = await bridge.textContainerUpgrade(
+        new TextContainerUpgrade({
+          containerID: CONTAINER_ID,
+          containerName: CONTAINER_NAME,
+          contentOffset: 0,
+          contentLength: 0, // 0 with offset 0 replaces the whole content
+          content,
+        }),
+      )
+      if (!ok) {
+        console.error('textContainerUpgrade rejected the update')
+      }
+    } while (repaintQueued)
+  } catch (err) {
+    // Without this the screen silently stops updating and the app looks
+    // frozen, with nothing in the console to explain why.
+    console.error('paint failed:', err)
+  } finally {
+    painting = false
+  }
 }
 
 function step(delta: number): void {
