@@ -36,7 +36,7 @@ not an embedded binary.
 
 | App | What it does | Status |
 |---|---|---|
-| [pickup-lines](apps/pickup-lines) | Bundled pickup lines across five categories, cycled by gesture | Builds, layout verified, untested on hardware |
+| [pickup-lines](apps/pickup-lines) |  35 bundled lines across five categories, cycled by gesture | Verified in simulator, untested on hardware |
 
 ## Working on this
 

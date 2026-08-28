@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "check-layout": "tsx scripts/check-layout.mts",
-    "simulator": "evenhub-simulator http://localhost:5173"
+    "simulator": "node node_modules/@evenrealities/evenhub-simulator/bin/index.js http://localhost:5173",
+    "simulator:auto": "node node_modules/@evenrealities/evenhub-simulator/bin/index.js http://localhost:5173 --automation-port 9898"
   },
   "devDependencies": {
     "@evenrealities/evenhub-cli": "^0.1.14",

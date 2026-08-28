@@ -40,6 +40,9 @@ const FOREGROUND_ENTER = 4
 const SYSTEM_EXIT = 7
 const ABNORMAL_EXIT = 6
 
+/** StartUpPageCreateResult.invalid */
+const PAGE_CREATE_INVALID = 1
+
 let categoryIndex = 0
 let lineIndex = 0
 
@@ -70,8 +73,8 @@ function nextCategory(): void {
   lineIndex = 0
 }
 
-const result = await bridge.createStartUpPageContainer(
-  new CreateStartUpPageContainer({
+function buildPage(): CreateStartUpPageContainer {
+  return new CreateStartUpPageContainer({
     containerTotalNum: 1,
     textObject: [
       new TextContainerProperty({
@@ -88,8 +91,20 @@ const result = await bridge.createStartUpPageContainer(
         isEventCapture: 1,
       }),
     ],
-  }),
-)
+  })
+}
+
+let result = await bridge.createStartUpPageContainer(buildPage())
+
+// StartUpPageCreateResult.invalid. In development this almost always
+// means a container from the previous page load is still alive in the
+// host: Vite full-reloads this entry module rather than hot-swapping it,
+// so the dispose hook below never runs. Tear the stale page down and
+// try once more rather than leaving a dead app on screen.
+if (result === PAGE_CREATE_INVALID) {
+  await bridge.shutDownPageContainer(0)
+  result = await bridge.createStartUpPageContainer(buildPage())
+}
 
 if (result !== 0) {
   console.error('Failed to create page container, result:', result)
@@ -141,3 +156,17 @@ const unsubscribe = bridge.onEvenHubEvent((event) => {
     }
   }
 })
+
+// Vite replaces this module on every edit, which re-runs the code above
+// and calls createStartUpPageContainer while container 1 still exists.
+// The host rejects that with StartUpPageCreateResult.invalid (1) and the
+// app appears to hang until the simulator is restarted. Tear down the
+// old container first so the reloaded module starts from a clean page.
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    unsubscribe()
+    // Mode 0 exits immediately. Mode 1 would prompt the user, which is
+    // wrong for a reload they did not ask for.
+    void bridge.shutDownPageContainer(0)
+  })
+}
