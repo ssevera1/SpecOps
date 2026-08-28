@@ -1,83 +1,110 @@
 /**
- * The corpus. Bundled at build time so the app works with no network,
- * no API key, and no latency while you are standing in front of someone.
+ * The corpus, organised by the psychological mechanism each line runs
+ * on. The category name is the mechanism, so the header teaches you why
+ * the line works while you are using it.
  *
- * Keep lines short. The G2 renders 27px fixed line height into a 288px
- * display, so roughly 10 rows fit and the body area holds about 8 of
- * them after the header and footer. Run `npm run check-layout` after
- * editing; it fails if anything would overflow.
+ * Every line is bundled at build time. No network call sits between a
+ * gesture and the line appearing.
+ *
+ * Keep lines under roughly 200 characters. The body area is 8 rows and
+ * `npm run check-layout` fails if anything would overflow.
  */
 
 export interface Category {
-  /** Shown in the header. Keep it under 12 characters so the counter fits. */
+  /** Shown in the header. Keep it short so the counter fits. */
   name: string
+  /** One sentence on the mechanism, for the README and the curious. */
+  why: string
   lines: string[]
 }
 
 export const CATEGORIES: Category[] = [
   {
-    name: 'OPENERS',
+    name: 'PRATFALL',
+    why: 'Aronson, 1966. A visible flaw makes a competent person more likeable, not less. Admit the nerves first and there is nothing left to catch you on.',
     lines: [
-      "I practiced this in the mirror and the mirror advised against it.",
-      "I'm not going to pretend this is going well. I am going to keep going.",
-      "I had one good line and I used it on the bartender. You get the runner-up.",
-      "I've been building up to this for eleven minutes. That's the whole pitch.",
-      "My friends bet I wouldn't come over here. We're all learning something tonight.",
-      "I'm told confidence is attractive. I'm hoping the impression counts.",
-      "You looked approachable, which was your first mistake.",
+      "I rehearsed an opener for six minutes and lost all of it on the walk over. So this is the opener now.",
+      "My hands are doing a thing. I'd like to blame the cold. It is not the cold.",
+      "There's a confident version of this in my head. You're getting the live broadcast.",
+      "I'm going to say something clever in about ninety seconds. Until then, hi.",
+      "I was told to act natural. This is natural. I'm sorry.",
+      "I've got nothing. I walked over here on the strength of nothing. That's how sure I was.",
     ],
   },
   {
-    name: 'NERD',
+    name: 'CURIOSITY',
+    why: 'Loewenstein\'s information gap. Open a loop and people need to close it. The line is not the hook; the unanswered question is.',
     lines: [
-      "I would let you deploy to production on a Friday.",
-      "You're the only thing in this room with no documented edge cases.",
-      "My whole personality is a cached response. You just caused a cache miss.",
-      "I'd call you one in a million, but I've seen the population data and it's worse.",
-      "You're statistically significant and I have not adjusted for multiple comparisons.",
-      "I have excellent error handling everywhere except this exact situation.",
-      "If you were a dependency I would pin your exact version and never upgrade.",
+      "I have a theory about you. It takes one drink to test and I'm right about sixty percent of the time.",
+      "I noticed something about you that nobody else in here would. I'll tell you if you ask.",
+      "You remind me of someone, and it's going to bother me until you tell me your name.",
+      "I've got a question I've only ever asked two people. Both said it was a weird question. I'm asking anyway.",
+      "There's a reason I came over and it's not the obvious one.",
+      "I've been trying to work out what you do for a living. I have three guesses. One of them is insulting.",
+    ],
+  },
+  {
+    name: 'THE OUT',
+    why: 'Reactance theory, and Gueguen\'s "but you are free" studies. Hand someone a clean exit and they are far more likely not to take it.',
+    lines: [
+      "You can tell me to get lost. I'd just prefer to hear it from you specifically.",
+      "This has a ten-second exit clause. Say the word and I evaporate. Otherwise, hi.",
+      "If this is a no, I'll be completely fine, and also go home and write a short poem about it.",
+      "I'm going to ask you something, and 'no' is a perfectly good answer that I will take beautifully.",
+      "You're free to ignore me. I've been ignored by professionals. You'd be in good company.",
+      "Feel free to say you're waiting for someone. I'll nod like I believe it. I'm very good at that.",
+    ],
+  },
+  {
+    name: 'COLD READ',
+    why: 'The Forer effect. Statements that feel personal but fit almost anyone. Say it with certainty and watch them fill in the details for you.',
+    lines: [
+      "You look like the friend who plans everything and gets thanked for none of it.",
+      "I'm guessing you're the one people call at two in the morning, and somehow you're the difficult one.",
+      "You have the face of someone who's been called 'a lot' by people who weren't enough.",
+      "You seem like you have a strong opinion about a very specific thing and nobody's asked you about it tonight.",
+      "You look smarter than the last three people who talked to you, and like you were nice about it.",
+      "I'd guess you're the person who says 'I'm fine' and then quietly rebuilds the whole thing yourself.",
+    ],
+  },
+  {
+    name: 'MISDIRECT',
+    why: 'Benign violation. Set up the cliche they are braced for, then break it. The laugh is the relief of not getting the line they expected.',
+    lines: [
+      "Do you believe in love at first sight? Me neither. I've been staring for ten minutes to be thorough.",
+      "Is it hot in here or... no, it's just hot in here. I checked. Separate question: hi.",
+      "I'd say heaven's missing an angel, but I don't need to invent a whole situation. You're right there.",
+      "Did it hurt when you... no. Nope. Not doing that one. I'm better than that. I'm not, but I'd like to be.",
+      "Are you from Tennessee? Because I have no idea what comes next. Are you, though?",
+      "If I said you had a beautiful body, would you hold it against me? It's a yes or no. I'm being polite.",
+    ],
+  },
+  {
+    name: 'RECIPROCITY',
+    why: 'Cialdini. Give first and people feel the pull to give back. Offer a secret, a drink, or a story before you ask for anything.',
+    lines: [
+      "I'll tell you my most embarrassing story, then it's your turn. That's the deal. No backing out.",
+      "First drink's on me and the second one's your decision. I think that's fair.",
+      "We're going to argue about pineapple on pizza eventually. I'd like to get it out of the way now.",
+      "I already know how this ends. You tell it at a dinner party in 2031. I'm hoping I'm at the table.",
+      "I'll go first: my worst quality is I talk to strangers in bars. Your turn.",
+      "Here's a secret, so now you owe me one: I have no idea what I'm doing. What's yours?",
     ],
   },
   {
     name: 'GLASSES',
+    why: 'The pratfall only this hardware can perform. Admitting you are reading the line off your own face is the most honest thing in the room.',
     lines: [
       "I have no camera. For all I know you're a lamp. I'm committed now.",
-      "These glasses cost more than my car and they are currently displaying this.",
-      "There's a man in my glasses telling me what to say. He is not good at it.",
+      "There's a man in my glasses telling me what to say. He is not good at it. I'm still here.",
       "I paid several hundred dollars to have worse ideas closer to my eyes.",
-      "I'm reading this off a heads-up display, so somebody thought this was worth building.",
-      "I have sixteen shades of green and not one of them is doing you justice.",
-      "My glasses wrote this. I'm just the delivery mechanism and I'm underperforming.",
-    ],
-  },
-  {
-    name: 'AWFUL',
-    lines: [
-      "Are you a parking ticket? I'm told there's more to it but I've lost the thread.",
-      "If you were a vegetable you'd be a cute-cumber. I heard it as I said it.",
-      "Is your dad a boxer? Because... look, I did not write these.",
-      "Do you have a map? Because I've committed to this metaphor and I regret it.",
-      "You must be tired, because you've been running through my... no. Nope.",
-      "Are you French? Because Eiffel for you. I'd like the last four seconds back.",
-      "I'd tell you a chemistry joke but the good ones argon.",
-    ],
-  },
-  {
-    name: 'HONEST',
-    lines: [
-      "I had a whole strategy. I've abandoned it. Hi.",
-      "I'll level with you: the other four categories are considerably worse.",
-      "This is the part where I'd normally overthink it for another twenty minutes.",
-      "Statistically this ends badly, but I've never been good at reading a room.",
-      "No line. You just seemed worth interrupting my evening for.",
-      "I'm going to regret saying nothing more than I'll regret saying this.",
-      "I noticed you and decided that was worth telling you out loud. That's it.",
+      "My glasses just said the battery's at twelve percent. Same, honestly.",
+      "I'm reading this off a heads-up display, so you're not being hit on by me. You're being hit on by a committee.",
+      "Sixteen shades of green and not one of them is doing you justice.",
     ],
   },
 ]
 
-/** Total lines across every category, for the startup log. */
 export function totalLines(): number {
   return CATEGORIES.reduce((sum, c) => sum + c.lines.length, 0)
 }

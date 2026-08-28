@@ -1,15 +1,15 @@
 {
-  "name": "pickup-lines",
+  "name": "jokes",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 5173 --strictPort",
+    "dev": "vite --port 5174 --strictPort",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "check-layout": "tsx scripts/check-layout.mts",
-    "simulator": "node ../../tools/sim.mjs 5173 --glow",
-    "simulator:auto": "node ../../tools/sim.mjs 5173 --auto 9898"
+    "simulator": "node ../../tools/sim.mjs 5174 --glow",
+    "simulator:auto": "node ../../tools/sim.mjs 5174 --auto 9899"
   },
   "dependencies": {
     "@specops/g2-kit": "*"
