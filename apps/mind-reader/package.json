@@ -1,0 +1,17 @@
+{
+  "name": "mind-reader",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5175 --strictPort",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "check-layout": "tsx scripts/check-layout.mts",
+    "simulator": "node ../../tools/sim.mjs 5175 --glow",
+    "simulator:auto": "node ../../tools/sim.mjs 5175 --auto 9900"
+  },
+  "dependencies": {
+    "@specops/g2-kit": "*"
+  }
+}

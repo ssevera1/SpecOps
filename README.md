@@ -71,6 +71,7 @@ build rather than the moment.
 |---|---|---|
 | [pickup-lines](apps/pickup-lines) | Lines organised by the psychological mechanism each one runs on | Verified in simulator, untested on hardware |
 | [jokes](apps/jokes) | Setup on screen, tap for the punchline, so you control the timing | Verified in simulator, untested on hardware |
+| [mind-reader](apps/mind-reader) | A staged cold reading to perform on someone. Six stages, tap for an alternate line | Verified in simulator, untested on hardware |
 
 ## Working on this
 
